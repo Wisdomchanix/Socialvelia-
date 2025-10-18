@@ -20,7 +20,7 @@ const Testimonials: React.FC = () => {
 
   useEffect(() => {
     ScrollReveal().reveal(".testimonialcard", {
-      duration: 1000,
+      duration: 900,
       distance: "60px",
       origin: "bottom",
       easing: "ease-in-out",

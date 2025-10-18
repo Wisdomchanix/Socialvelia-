@@ -54,9 +54,9 @@ const Hero: React.FC = () => {
           {/* LEFT — text section */}
           <div className="w-full lg:w-6/12 text-center lg:text-left hero">
             <div className="mb-6">
-              <div className="inline-block rounded-full px-3 py-1 text-sm font-medium bg-black/10 dark:bg-white/10 text-gray-800 dark:text-gray-200">
+              {/* <div className="inline-block rounded-full px-3 py-1 text-sm font-medium bg-black/10 dark:bg-white/10 text-gray-800 dark:text-gray-200">
                 SocialVelia
-              </div>
+              </div> */}
             </div>
 
             {/* HEADLINE */}
@@ -181,12 +181,12 @@ const Hero: React.FC = () => {
                 }}
               />
 
-              <div className="rounded-lg overflow-hidden bg-gray-50 dark:bg-[#0f0b14] relative hero_image">
+              <div className="rounded-lg overflow-hidde bg-gray-50 dark:bg-[#0f0b14] relative hero_image">
                 <img
-                  src="\src\images\dashboard.jpg"
+                  src="\images\MacDashboard.jpg"
                   alt="product screenshot"
-                  className="w-full object-cover block h-full"
-                  style={{ height: 320 }}
+                  className="w-screen h-full rounded"
+                // style={{ height: 320 }}
                 />
                 <button className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/2 top-1/2 bg-white/60 dark:bg-black/20 rounded-full p-4 shadow-lg hover:scale-105 transition">
                   <svg

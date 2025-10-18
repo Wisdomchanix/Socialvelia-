@@ -3,10 +3,10 @@ import { motion } from "framer-motion";
 
 // ✅ Import images directly from your local folder
 // Example folder: src/assets/logos/
-import vertex from "../images/Brandfive.png";
-import squarestone from "../images/Brandfour.jpg";
-import martino from "../images/Brandthree.jpg";
-import waverio from "../images/Brandsix.jpg";
+import vertex from "/images/Brandfive.png";
+import squarestone from "/images/Brandfour.jpg";
+import martino from "/images/Brandthree.jpg";
+import waverio from "/images/Brandsix.jpg";
 
 const brands = [
   { name: "Vertex", logo: vertex },
@@ -36,7 +36,7 @@ const Brands: React.FC = () => {
             transition={{
               repeat: Infinity,
               ease: "linear",
-              duration: 18,
+              duration: 5,
             }}
           >
             {brands.map((brand, index) => (
