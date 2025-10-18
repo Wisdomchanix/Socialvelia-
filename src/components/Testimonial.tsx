@@ -35,7 +35,7 @@ const Testimonials: React.FC = () => {
         {/* Masonry container */}
         <div className="columns-2 sm:columns-3 lg:columns-4 gap-4 space-y-4">
           {testimonials.map((t, index) => {
-            const isMobile = index < 6;
+            // const isMobile = index < 6;
             const height = index < 6 ? mobileHeights[index % mobileHeights.length] : desktopHeights[index % desktopHeights.length];
 
             return (
