@@ -28,7 +28,10 @@ const Header: React.FC = () => {
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+    setOpen(false); // ✅ closes menu when toggled
+  };
 
   return (
     <nav
@@ -114,14 +117,16 @@ const Header: React.FC = () => {
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
+        {/* Close Button */}
         <div className="absolute top-4 right-4">
           <button onClick={() => setOpen(false)}>
             <HiX size={28} className="text-gray-800 dark:text-white" />
           </button>
         </div>
 
+        {/* Menu Links */}
         <ul className="flex flex-col gap-6 p-6 text-gray-800 dark:text-gray-300 font-medium text-lg pt-10">
-          {["Home", "Features", "Howitworks", "Pricing", "Contact"].map(
+          {["Home", "Features", "How it Works", "Pricing", "Contact"].map(
             (item) => (
               <li key={item}>
                 <a
@@ -136,10 +141,12 @@ const Header: React.FC = () => {
           )}
         </ul>
 
-        <div className="p-6 border-t border-gray-300 dark:border-gray-700 flex items-center justify-between">
+        {/* CTA + Theme Toggle (moved up slightly) */}
+        <div className="p-6 mb-12 flex items-center justify-between">
           <button className="bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition text-sm">
             Get Started
           </button>
+
           <button
             onClick={toggleTheme}
             className="relative w-9 h-9 flex items-center justify-center rounded-full bg-gray-200 dark:bg-gray-800 hover:scale-105 transition"

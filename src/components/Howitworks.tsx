@@ -40,7 +40,7 @@ const Howitworks: React.FC = () => {
   }, []);
 
   return (
-    <section className="py-20 bg-gray-50 dark:bg-[#0B001A] text-center transition-colors duration-500" id="howitworks">
+    <section className="py-20 bg-gray-50 dark:bg-[#0B001A] text-center transition-colors duration-500" id="How it Works">
       <div className="max-w-6xl mx-auto px-6">
         <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white transition-colors duration-300">
           How it works
