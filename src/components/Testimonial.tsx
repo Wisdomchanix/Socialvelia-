@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import ScrollReveal from "scrollreveal";
+import {Link} from "react-router-dom";
 
 const testimonials = [
   { id: 1, text: "I stopped guessing what to post. Now every idea connects with my audience.", author: "Daniel A., Video Editor" },
@@ -66,9 +67,9 @@ const Testimonials: React.FC = () => {
         <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-6 transition-colors duration-300">
           From discovering their niche to creating viral content, our users share how Social Velia helped them grow faster and turn creativity into real results.
         </p>
-        <button className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 rounded font-medium hover:scale-105 transition-transform">
+        <Link to={"/signup"} className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 rounded font-medium hover:scale-105 transition-transform">
           Try Social Velia
-        </button>
+        </Link>
       </div>
     </section>
   );

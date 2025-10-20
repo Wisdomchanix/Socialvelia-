@@ -1,29 +1,30 @@
-import Header from "./components/Header"
 import Hero from "./components/Hero"
-import Brands from "./components/Brands"
-import Howitworks from "./components/Howitworks"
-import Features from "./components/Features"
-import Testimonial from "./components/Testimonial"
-import Faq from "./components/Faq"
-import Contact from "./components/Contact"
-import Footer from "./components/Footer"
-import ScrollToTop from "./components/ScrollToTop"
+import Signup from "./components/SignUp";
+import Login from "./components/Login";
+import Dashboard from "./components/Dashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
+import VerifyEmail from "./components/VerifyEmail";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
 
   return (
-    <>
-     <Header/>
-     <Hero/>
-     <Brands/>
-     <Howitworks/>
-     <Features/>
-     <Testimonial/>
-     <Faq/>
-     <Contact/>
-     <Footer/>
-     <ScrollToTop/>
-    </>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Hero />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/verify" element={<VerifyEmail />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </Router>
   )
 }
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
 import { Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import {Link} from "react-router-dom";
 
 const Header: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -64,9 +65,9 @@ const Header: React.FC = () => {
 
         {/* Desktop CTA + Theme Toggle */}
         <div className="hidden md:flex items-center gap-3">
-          <button className="bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-purple-700 transition text-sm">
+          <Link to={"/signup"} className="bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-purple-700 transition text-sm">
             Get Started
-          </button>
+          </Link>
 
           <button
             onClick={toggleTheme}
@@ -143,9 +144,9 @@ const Header: React.FC = () => {
 
         {/* CTA + Theme Toggle (moved up slightly) */}
         <div className="p-6 mb-12 flex items-center justify-between">
-          <button className="bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition text-sm">
+          <Link to={"/signup"} className="bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition text-sm">
             Get Started
-          </button>
+          </Link>
 
           <button
             onClick={toggleTheme}
