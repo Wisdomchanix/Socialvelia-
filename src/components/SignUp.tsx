@@ -6,6 +6,7 @@ import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
   signInWithPopup,
+  updateProfile,
 } from "firebase/auth";
 import { auth, googleProvider } from "../Firebase/firebase";
 import { FcGoogle } from "react-icons/fc";
@@ -75,9 +76,16 @@ const Signup: React.FC = () => {
         formData.email,
         formData.password
       );
-      const user = userCredential.user;
 
-      await sendEmailVerification(user);
+      // ✅ Update user display name
+      if (auth.currentUser) {
+        await updateProfile(auth.currentUser, {
+          displayName: formData.name,
+        });
+      }
+
+      // ✅ Send email verification
+      await sendEmailVerification(userCredential.user);
       navigate("/verify");
     } catch (err: any) {
       console.error("Signup Error:", err);
@@ -106,7 +114,15 @@ const Signup: React.FC = () => {
   const handleGoogleSignup = async () => {
     try {
       setLoading(true);
-      await signInWithPopup(auth, googleProvider);
+      const result = await signInWithPopup(auth, googleProvider);
+
+      // ✅ Automatically store Google display name if available
+      if (result.user && result.user.displayName) {
+        await updateProfile(result.user, {
+          displayName: result.user.displayName,
+        });
+      }
+
       navigate("/dashboard");
     } catch (err: any) {
       console.error("Google Sign-in Error:", err);
@@ -120,6 +136,18 @@ const Signup: React.FC = () => {
     <section className="min-h-screen flex items-center justify-center bg-white dark:bg-[#05010E] text-gray-900 dark:text-white relative overflow-hidden px-6 py-12 transition-colors duration-500">
       {/* Background glow */}
       <div className="absolute inset-0 bg-gradient-to-b from-purple-200/30 via-pink-200/20 to-transparent dark:from-[#3a0ca3]/20 dark:via-[#7209b7]/10 dark:to-transparent blur-3xl transition-colors duration-500" />
+
+      <svg className="absolute top-0 right-0 w-1/2 opacity-10" viewBox="0 0 400 400">
+        <defs>
+          <linearGradient id="grad" x1="0" x2="1" y1="0" y2="1">
+            <stop stopColor="#7209b7" />
+            <stop stopColor="#f72585" offset="1" />
+          </linearGradient>
+        </defs>
+
+        <circle cx="200" cy="200" r="220" stroke="url(#grad)" strokeWidth="2" fill="none" />
+      </svg>
+
 
       {/* Signup Card */}
       <motion.div
@@ -177,7 +205,6 @@ const Signup: React.FC = () => {
               />
             </div>
 
-            {/* Strength Bar */}
             {formData.password && (
               <div className="w-80 h-2 bg-gray-300/30 dark:bg-white/10 rounded-full overflow-hidden">
                 <motion.div
@@ -188,10 +215,8 @@ const Signup: React.FC = () => {
                       strength <= 1
                         ? "linear-gradient(to right, #ff4d4d, #ff9966)"
                         : strength === 2
-                        ? "linear-gradient(to right, #ffcc00, #ffeb3b)"
-                        : strength >= 3
-                        ? "linear-gradient(to right, #00e676, #00c853)"
-                        : "#ff4d4d",
+                          ? "linear-gradient(to right, #ffcc00, #ffeb3b)"
+                          : "linear-gradient(to right, #00e676, #00c853)",
                   }}
                   transition={{ duration: 0.4 }}
                   className="h-2 rounded-full"
@@ -200,13 +225,12 @@ const Signup: React.FC = () => {
             )}
             {formData.password && (
               <p
-                className={`text-xs ${
-                  strength <= 1
-                    ? "text-red-400"
-                    : strength === 2
+                className={`text-xs ${strength <= 1
+                  ? "text-red-400"
+                  : strength === 2
                     ? "text-yellow-400"
                     : "text-green-400"
-                }`}
+                  }`}
               >
                 Password strength: {strengthLabel}
               </p>
@@ -223,11 +247,10 @@ const Signup: React.FC = () => {
               value={formData.confirmPassword}
               onChange={handleChange}
               required
-              className={`w-full pl-10 pr-4 py-2 rounded-lg border ${
-                formData.confirmPassword && formData.password !== formData.confirmPassword
-                  ? "border-red-500 focus:ring-red-500"
-                  : "border-gray-300 dark:border-gray-700 focus:ring-[#7209b7]"
-              } bg-gray-50 dark:bg-white/5 text-gray-900 dark:text-white outline-none transition-all duration-500`}
+              className={`w-full pl-10 pr-4 py-2 rounded-lg border ${formData.confirmPassword && formData.password !== formData.confirmPassword
+                ? "border-red-500 focus:ring-red-500"
+                : "border-gray-300 dark:border-gray-700 focus:ring-[#7209b7]"
+                } bg-gray-50 dark:bg-white/5 text-gray-900 dark:text-white outline-none transition-all duration-500`}
             />
             {formData.confirmPassword && formData.password !== formData.confirmPassword && (
               <p className="text-xs text-red-400 mt-1">Passwords do not match</p>

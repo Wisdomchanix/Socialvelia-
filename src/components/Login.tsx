@@ -3,6 +3,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../Firebase/firebase";
 import { Link, useNavigate } from "react-router-dom";
@@ -14,36 +15,72 @@ const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false); // ✅ Loading state
   const navigate = useNavigate();
 
+  // ✅ Email & Password Login
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError(null);
+    setLoading(true); // ✅ Start loading
+
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // ✅ If user doesn’t have a display name, derive it from email
+      if (user && !user.displayName && user.email) {
+        const nameFromEmail = user.email.split("@")[0];
+        await updateProfile(user, { displayName: nameFromEmail });
+      }
+
       navigate("/dashboard");
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);
       else setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false); // ✅ Stop loading
     }
   };
 
+  // ✅ Google Sign-In
   const handleGoogleSignIn = async () => {
+    setLoading(true);
     try {
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // ✅ If displayName is missing, generate a name from the email prefix
+      if (user && !user.displayName && user.email) {
+        const nameFromEmail = user.email.split("@")[0];
+        await updateProfile(user, { displayName: nameFromEmail });
+      }
+
       navigate("/dashboard");
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);
       else setError("Google sign-in failed. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <section className="min-h-screen flex items-center justify-center bg-white dark:bg-[#05010E] text-gray-900 dark:text-white transition-colors duration-500 relative overflow-hidden px-6 py-12">
       {/* Background glow */}
+      <svg className="absolute top-0 right-0 w-1/2 opacity-10" viewBox="0 0 400 400">
+        <defs>
+          <linearGradient id="grad" x1="0" x2="1" y1="0" y2="1">
+            <stop stopColor="#7209b7" />
+            <stop stopColor="#f72585" offset="1" />
+          </linearGradient>
+        </defs>
+        <circle cx="200" cy="200" r="220" stroke="url(#grad)" strokeWidth="2" fill="none" />
+      </svg>
+
       <div className="absolute inset-0 bg-gradient-to-b from-purple-200/30 via-pink-200/20 to-transparent dark:from-[#3a0ca3]/20 dark:via-[#7209b7]/10 dark:to-transparent blur-3xl transition-colors duration-500" />
 
       <div className="relative w-full max-w-md bg-white/70 dark:bg-white/5 backdrop-blur-lg p-8 rounded-2xl shadow-2xl border border-gray-200 dark:border-white/10 transition-all duration-500">
-        {/* Decorative SVG */}
         <div className="absolute inset-0 -z-10 opacity-20 bg-[url('https://www.svgrepo.com/show/508699/mesh-gradient.svg')] bg-cover bg-center rounded-2xl blur-lg" />
 
         <h2 className="text-3xl font-semibold mb-6 text-center bg-gradient-to-r from-[#9b5de5] to-[#f72585] bg-clip-text text-transparent">
@@ -57,6 +94,7 @@ const Login: React.FC = () => {
             className="w-full p-3 rounded-lg bg-gray-50 dark:bg-white/10 border border-gray-300 dark:border-gray-700 outline-none focus:ring-2 focus:ring-[#7209b7] text-gray-900 dark:text-white transition-all duration-500"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
           <input
             type="password"
@@ -64,15 +102,21 @@ const Login: React.FC = () => {
             className="w-full p-3 rounded-lg bg-gray-50 dark:bg-white/10 border border-gray-300 dark:border-gray-700 outline-none focus:ring-2 focus:ring-[#7209b7] text-gray-900 dark:text-white transition-all duration-500"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
 
           {error && <p className="text-red-500 text-sm">{error}</p>}
 
           <button
             type="submit"
-            className="w-full py-3 bg-gradient-to-r from-[#9b5de5] to-[#f72585] text-white rounded-lg font-semibold hover:opacity-90 transition"
+            disabled={loading}
+            className={`w-full py-3 rounded-lg font-semibold transition ${
+              loading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-gradient-to-r from-[#9b5de5] to-[#f72585] hover:opacity-90 text-white"
+            }`}
           >
-            Log In
+            {loading ? "Logging in..." : "Log In"}
           </button>
         </form>
 
@@ -80,10 +124,11 @@ const Login: React.FC = () => {
         <div className="mt-6 flex items-center justify-center">
           <button
             onClick={handleGoogleSignIn}
-            className="flex items-center justify-center gap-3 w-full py-3 bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 rounded-lg font-semibold text-gray-900 dark:text-white transition-all duration-500"
+            disabled={loading}
+            className="flex items-center justify-center gap-3 w-full py-3 bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 rounded-lg font-semibold text-gray-900 dark:text-white transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <FcGoogle className="text-2xl" />
-            Continue with Google
+            {loading ? "Signing in..." : "Continue with Google"}
           </button>
         </div>
 

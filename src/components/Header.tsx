@@ -2,19 +2,16 @@ import React, { useState, useEffect } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
 import { Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Header: React.FC = () => {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [theme, setTheme] = useState<"light" | "dark">(() => {
-    if (localStorage.getItem("theme")) {
-      return localStorage.getItem("theme") as "light" | "dark";
-    }
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
-      ? "dark"
-      : "light";
-  });
+
+  // ✅ Always default to dark theme if nothing stored
+  const [theme, setTheme] = useState<"light" | "dark">(
+    (localStorage.getItem("theme") as "light" | "dark") || "dark"
+  );
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 50);
@@ -22,16 +19,20 @@ const Header: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // ✅ Apply dark theme immediately on load and persist changes
   useEffect(() => {
-    const root = window.document.documentElement;
-    if (theme === "dark") root.classList.add("dark");
-    else root.classList.remove("dark");
+    const root = document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
     localStorage.setItem("theme", theme);
   }, [theme]);
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");
-    setOpen(false); // ✅ closes menu when toggled
+    setOpen(false);
   };
 
   return (
@@ -65,7 +66,10 @@ const Header: React.FC = () => {
 
         {/* Desktop CTA + Theme Toggle */}
         <div className="hidden md:flex items-center gap-3">
-          <Link to={"/signup"} className="bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-purple-700 transition text-sm">
+          <Link
+            to={"/signup"}
+            className="bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-purple-700 transition text-sm"
+          >
             Get Started
           </Link>
 
@@ -142,9 +146,12 @@ const Header: React.FC = () => {
           )}
         </ul>
 
-        {/* CTA + Theme Toggle (moved up slightly) */}
+        {/* CTA + Theme Toggle */}
         <div className="p-6 mb-12 flex items-center justify-between">
-          <Link to={"/signup"} className="bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition text-sm">
+          <Link
+            to={"/signup"}
+            className="bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition text-sm"
+          >
             Get Started
           </Link>
 

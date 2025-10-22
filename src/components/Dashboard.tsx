@@ -1,27 +1,276 @@
-// import React from "react";
-import { signOut } from "firebase/auth";
-import { auth } from "../Firebase/firebase";
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import {
+  User,
+  Sparkles,
+  Type,
+  Mic,
+  LogOut,
+  Trash2,
+  HelpCircle,
+  Compass,
+} from "lucide-react";
+import { useAuth } from "./AuthContext";
 
-const Dashboard = () => {
+const Dashboard: React.FC = () => {
+  const [activeTab, setActiveTab] = useState("niche");
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { user, logout, deleteAccount } = useAuth();
 
   const handleLogout = async () => {
-    await signOut(auth);
+    await logout();
     navigate("/login");
   };
 
+  const handleDelete = async () => {
+    if (window.confirm("Are you sure you want to permanently delete your account?")) {
+      try {
+        await deleteAccount();
+        alert("Account deleted successfully.");
+        navigate("/signup");
+      } catch (error) {
+        alert("Failed to delete account. Try logging in again before deleting.");
+        console.error(error);
+      }
+    }
+  };
 
+  const tabs = [
+    { id: "niche", label: "Niche", icon: <Compass className="w-5 h-5 text-white" /> },
+    { id: "viral", label: "Ideas", icon: <Sparkles className="w-5 h-5 text-white" /> },
+    { id: "prompt", label: "Prompt", icon: <Type className="w-5 h-5 text-white" /> },
+    { id: "voice", label: "Voice", icon: <Mic className="w-5 h-5 text-white" /> },
+  ];
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "niche":
+        return <p className="text-gray-300 mt-6">Choose your niche content...</p>;
+      case "viral":
+        return <p className="text-gray-300 mt-6">Find viral content ideas...</p>;
+      case "prompt":
+        return <p className="text-gray-300 mt-6">Refine your prompts...</p>;
+      case "voice":
+        return <p className="text-gray-300 mt-6">Generate voiceovers...</p>;
+      default:
+        return null;
+    }
+  };
+
+  const firstName =
+    user?.displayName?.split(" ")[0] ||
+    user?.email?.split("@")[0] ||
+    "Creator";
 
   return (
-    <div className="min-h-screen bg-[#05010E] text-white flex flex-col items-center justify-center">
-      <h1 className="text-3xl font-bold mb-4">Welcome to your Dashboard 🚀</h1>
-      <button
-        onClick={handleLogout}
-        className="px-6 py-3 bg-pink-600 rounded-lg font-semibold hover:opacity-90"
+    <div className="relative min-h-screen flex bg-[#05010E] text-white overflow-hidden">
+      {/* ✨ Background Gradient */}
+      <svg
+        className="absolute top-0 right-0 w-3/4 md:w-2/3 opacity-4"
+        viewBox="0 0 600 600"
+        xmlns="http://www.w3.org/2000/svg"
       >
-        Logout
-      </button>
+        <defs>
+          <linearGradient id="grad" x1="0" x2="1" y1="0" y2="1">
+            <stop stopColor="#7209b7" />
+            <stop stopColor="#f72585" offset="1" />
+          </linearGradient>
+        </defs>
+
+        <circle
+          cx="300"
+          cy="300"
+          r="280"
+          stroke="url(#grad)"
+          strokeWidth="3"
+          fill="none"
+        />
+      </svg>
+
+
+      {/* ===== DESKTOP SIDEBAR ===== */}
+      <aside className="hidden md:flex flex-col justify-between w-64 bg-[#0A0219]/80 border-r border-white/10 backdrop-blur-md p-6">
+        <div>
+          <h1 className="text-xl font-bold text-white mb-10 tracking-wide">
+            Social <span className="text-[#9b5de5]">Velia</span>
+          </h1>
+
+          <nav className="flex flex-col gap-4">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 ${activeTab === tab.id
+                    ? "bg-gradient-to-r from-[#9b5de5] to-[#f72585] text-white"
+                    : "text-gray-400 hover:text-white hover:bg-white/5"
+                  }`}
+              >
+                {tab.icon}
+                <span>{tab.label}</span>
+              </button>
+            ))}
+          </nav>
+        </div>
+
+        <div className="flex flex-col gap-3 text-gray-400 mt-10">
+          <button className="flex items-center gap-3 hover:text-[#9b5de5] transition">
+            <HelpCircle className="w-5 h-5" /> Help & Support
+          </button>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3 hover:text-[#F1824A] transition"
+          >
+            <LogOut className="w-5 h-5" /> Logout
+          </button>
+          <button
+            onClick={handleDelete}
+            className="flex items-center gap-3 hover:text-red-500 transition"
+          >
+            <Trash2 className="w-5 h-5" /> Delete Account
+          </button>
+        </div>
+      </aside>
+
+      {/* ===== MAIN CONTENT ===== */}
+      <main className="flex-1 flex flex-col">
+        {/* HEADER */}
+        <header className="flex justify-between items-center px-5 pt-6 pb-3 border-b border-white/5">
+          <div className="md:hidden">
+            <h2 className="text-lg font-semibold flex items-center gap-1">
+              👋 Hey,{" "}
+              <motion.span
+                className="text-[#9b5de5]"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                {firstName}
+              </motion.span>
+            </h2>
+            <p className="text-sm text-gray-400">Welcome back to Social Velia</p>
+          </div>
+
+          <div className="hidden md:block ml-auto text-right">
+            <h2 className="text-lg font-semibold">
+              👋 Welcome,{" "}
+              <motion.span
+                className="text-[#9b5de5]"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+              >
+                {firstName}
+              </motion.span>
+            </h2>
+            <p className="text-sm text-gray-400">Glad to have you back!</p>
+          </div>
+
+          <button
+            onClick={() => setMenuOpen((prev) => !prev)}
+            className="md:hidden relative z-50 w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center shadow-lg"
+          >
+            <User className="w-5 h-5 text-white" />
+          </button>
+        </header>
+
+        {/* CONTENT */}
+        <section className="flex-1 px-6 pt-4 pb-24 overflow-y-auto">
+          {renderContent()}
+        </section>
+      </main>
+
+      {/* ===== MOBILE PROFILE MENU ===== */}
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            <motion.div
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40"
+              onClick={() => setMenuOpen(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "tween", duration: 0.3 }}
+              className="fixed right-0 top-0 h-full w-72 bg-[#0D061A] border-l border-white/10 shadow-2xl z-50 p-6 flex flex-col justify-between"
+            >
+              <div>
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-pink-500 flex items-center justify-center">
+                    <User className="text-white w-6 h-6" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold">{firstName}</h3>
+                    <p className="text-sm text-gray-400">{user?.email}</p>
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-4 text-gray-300">
+                  <button className="flex items-center gap-3 hover:text-[#9b5de5] transition">
+                    <HelpCircle className="w-5 h-5" /> Help & Support
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-3 hover:text-[#F1824A] transition"
+                  >
+                    <LogOut className="w-5 h-5" /> Logout
+                  </button>
+                  <button
+                    onClick={handleDelete}
+                    className="flex items-center gap-3 hover:text-red-500 transition"
+                  >
+                    <Trash2 className="w-5 h-5" /> Delete Account
+                  </button>
+                </div>
+              </div>
+
+              <p className="text-xs text-gray-500 text-center mt-6">
+                © 2025 Social Velia. All rights reserved.
+              </p>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {/* ===== MOBILE TAB BAR ===== */}
+      <nav className="md:hidden fixed bottom-3 left-1/2 transform -translate-x-1/2 bg-[#0A0219]/90 backdrop-blur-md border border-white/10 rounded-2xl px-4 py-2 flex justify-between w-[95%] max-w-sm shadow-lg">
+        {tabs.map((tab) => (
+          <motion.button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`relative flex flex-col items-center justify-center gap-1 text-xs transition-all duration-300 ${activeTab === tab.id ? "text-[#F1824A]" : "text-gray-400"
+              }`}
+          >
+            <AnimatePresence mode="wait">
+              {activeTab === tab.id ? (
+                <motion.div
+                  layoutId="activeTab"
+                  className="absolute -top-3 w-10 h-10 rounded-full bg-gradient-to-r from-[#9b5de5] to-[#f72585] flex items-center justify-center shadow-lg"
+                  initial={{ scale: 0.7, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.7, opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  {tab.icon}
+                </motion.div>
+              ) : (
+                <div className="w-5 h-5">{tab.icon}</div>
+              )}
+            </AnimatePresence>
+            <span
+              className={`mt-6 ${activeTab === tab.id ? "text-white font-medium" : ""
+                }`}
+            >
+              {tab.label}
+            </span>
+          </motion.button>
+        ))}
+      </nav>
     </div>
   );
 };
