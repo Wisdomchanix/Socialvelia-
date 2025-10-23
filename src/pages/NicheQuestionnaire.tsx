@@ -1,141 +1,117 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
+import { FaUser, FaLightbulb, FaBullhorn } from "react-icons/fa";
 
 const NicheQuestionnaire: React.FC = () => {
-  const [step, setStep] = useState(0);
-  const [answers, setAnswers] = useState({
-    passion: "",
-    skills: "",
-    audience: "",
-  });
-  const [suggestion, setSuggestion] = useState<string | null>(null);
+  const [answers, setAnswers] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [generatedNiche, setGeneratedNiche] = useState<string[]>([]);
 
   const questions = [
-    { key: "passion", label: "What topics are you passionate about?" },
-    { key: "skills", label: "What skills or knowledge do you already have?" },
-    { key: "audience", label: "Who do you want to help or reach with your content?" },
+    {
+      id: 1,
+      icon: <FaUser className="text-[#8b5cf6] text-xl" />,
+      question: "Who do you want to create content for?",
+      options: ["Entrepreneurs", "Students", "Tech Lovers", "Fitness Enthusiasts"],
+    },
+    {
+      id: 2,
+      icon: <FaLightbulb className="text-[#22d3ee] text-xl" />,
+      question: "What type of content excites you most?",
+      options: ["Tutorials", "Podcasts", "Lifestyle Tips", "Tech Reviews"],
+    },
+    {
+      id: 3,
+      icon: <FaBullhorn className="text-[#f59e0b] text-xl" />,
+      question: "What’s your main goal as a creator?",
+      options: ["Inspire People", "Build a Brand", "Earn Income", "Educate Others"],
+    },
   ];
 
-  const handleNext = async () => {
-    if (step < questions.length - 1) {
-      setStep(step + 1);
-    } else {
-      // Final step → fetch niche suggestion
-      await generateSuggestion();
+  const handleSelect = (questionIndex: number, option: string) => {
+    const updated = [...answers];
+    updated[questionIndex] = option;
+    setAnswers(updated);
+  };
+
+  const handleSubmit = async () => {
+    if (answers.length < questions.length) {
+      alert("Please answer all questions first.");
+      return;
     }
-  };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAnswers({ ...answers, [questions[step].key]: e.target.value });
-  };
-
-  const generateSuggestion = async () => {
     setLoading(true);
-    setError(null);
-    setSuggestion(null);
+    setGeneratedNiche([]);
 
     try {
-      const res = await fetch("/api/suggest-niche", {
+      const response = await fetch("/api/suggest-niche", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(answers),
+        body: JSON.stringify({ answers }),
       });
 
-      if (!res.ok) throw new Error("Failed to generate niche suggestion");
-
-      const data = await res.json();
-      setSuggestion(data.suggestion || "Could not generate a niche suggestion.");
-    } catch (err: any) {
-      setError(err.message || "Something went wrong.");
+      const data = await response.json();
+      setGeneratedNiche(data.suggestions || ["No niche found"]);
+    } catch (error) {
+      console.error(error);
+      setGeneratedNiche(["Error generating niche. Try again later."]);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleRestart = () => {
-    setStep(0);
-    setAnswers({ passion: "", skills: "", audience: "" });
-    setSuggestion(null);
-    setError(null);
-  };
-
   return (
-    <section className="min-h-screen bg-[#05010E] text-white flex flex-col items-center justify-center px-6">
-      <motion.div
-        className="bg-[#1a1029] p-6 rounded-2xl shadow-lg w-full max-w-md text-center"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        {!suggestion && !loading && (
-          <>
-            <h2 className="text-2xl font-semibold mb-4">
-              {questions[step].label}
-            </h2>
-            <input
-              type="text"
-              value={answers[questions[step].key as keyof typeof answers]}
-              onChange={handleChange}
-              placeholder="Type your answer..."
-              className="w-full p-3 bg-transparent border border-gray-500 rounded-lg focus:outline-none focus:border-purple-500"
-            />
-            <button
-              onClick={handleNext}
-              disabled={
-                !answers[questions[step].key as keyof typeof answers].trim()
-              }
-              className="mt-6 w-full bg-purple-600 hover:bg-purple-700 transition rounded-lg p-3 font-medium disabled:opacity-40"
-            >
-              {step === questions.length - 1 ? "Generate Niche" : "Next"}
-            </button>
-          </>
-        )}
+    <section className="min-h-screen bg-[#05010E] text-white flex flex-col items-center justify-center px-4 py-10">
+      <div className="max-w-xl w-full bg-[#1a1029] rounded-2xl shadow-xl p-6">
+        <h2 className="text-2xl font-semibold mb-6 text-center">
+          Discover Your Perfect Content Niche 🚀
+        </h2>
 
-        {/* 🔄 Loading state */}
-        {loading && (
-          <motion.div
-            key="loading"
-            className="flex flex-col items-center justify-center py-12"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <Loader2 className="animate-spin h-8 w-8 mb-4 text-purple-400" />
-            <p className="text-lg text-gray-300">Generating your niche...</p>
-          </motion.div>
-        )}
+        {questions.map((q, index) => (
+          <div key={q.id} className="mb-6">
+            <div className="flex items-center gap-2 mb-3">
+              {q.icon}
+              <p className="font-medium">{q.question}</p>
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              {q.options.map((option) => (
+                <motion.button
+                  key={option}
+                  onClick={() => handleSelect(index, option)}
+                  whileTap={{ scale: 0.95 }}
+                  className={`px-3 py-2 rounded-lg border text-sm ${
+                    answers[index] === option
+                      ? "bg-[#8b5cf6] border-[#8b5cf6] text-white"
+                      : "border-gray-600 text-gray-300 hover:bg-[#2a1f3a]"
+                  }`}
+                >
+                  {option}
+                </motion.button>
+              ))}
+            </div>
+          </div>
+        ))}
 
-        {/* ✅ Suggestion result */}
-        {!loading && suggestion && (
-          <motion.div
-            key="result"
-            className="flex flex-col items-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <h3 className="text-xl font-semibold mb-3 text-purple-400">
-              Your Suggested Niche
-            </h3>
-            <p className="bg-[#10071f] p-4 rounded-lg border border-purple-500/40 text-gray-200">
-              {suggestion}
-            </p>
-            <button
-              onClick={handleRestart}
-              className="mt-6 w-full bg-purple-600 hover:bg-purple-700 transition rounded-lg p-3 font-medium"
-            >
-              Start Over
-            </button>
-          </motion.div>
-        )}
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={handleSubmit}
+          disabled={loading}
+          className="w-full mt-4 py-3 bg-[#8b5cf6] rounded-lg font-medium hover:bg-[#7c3aed] transition"
+        >
+          {loading ? "Generating your niche..." : "Generate Niche"}
+        </motion.button>
 
-        {/* ⚠️ Error message */}
-        {error && (
-          <div className="mt-4 text-red-400">
-            <p>{error}</p>
+        {generatedNiche.length > 0 && (
+          <div className="mt-6 bg-[#2a1f3a] p-4 rounded-lg">
+            <h3 className="font-semibold mb-2">Your AI-Powered Suggestions:</h3>
+            <ul className="list-disc list-inside space-y-1 text-gray-300">
+              {generatedNiche.map((niche, i) => (
+                <li key={i}>{niche}</li>
+              ))}
+            </ul>
           </div>
         )}
-      </motion.div>
+      </div>
     </section>
   );
 };
