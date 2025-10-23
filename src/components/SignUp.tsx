@@ -84,7 +84,7 @@ const Signup: React.FC = () => {
         });
       }
 
-      // ✅ Send email verification
+      // Send email verification
       await sendEmailVerification(userCredential.user);
       navigate("/verify");
     } catch (err: any) {
@@ -110,13 +110,13 @@ const Signup: React.FC = () => {
     }
   };
 
-  // 🟣 Google Signup
+  // Google Signup
   const handleGoogleSignup = async () => {
     try {
       setLoading(true);
       const result = await signInWithPopup(auth, googleProvider);
 
-      // ✅ Automatically store Google display name if available
+      // Automatically store Google display name if available
       if (result.user && result.user.displayName) {
         await updateProfile(result.user, {
           displayName: result.user.displayName,

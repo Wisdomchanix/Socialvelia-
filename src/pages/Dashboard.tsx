@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
@@ -11,11 +11,12 @@ import {
   HelpCircle,
   Compass,
 } from "lucide-react";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../components/AuthContext";
 
 const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("niche");
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showNichePopup, setShowNichePopup] = useState(false);
   const navigate = useNavigate();
   const { user, logout, deleteAccount } = useAuth();
 
@@ -36,6 +37,12 @@ const Dashboard: React.FC = () => {
       }
     }
   };
+
+  useEffect(() => {
+    // show popup after 3 seconds
+    const timer = setTimeout(() => setShowNichePopup(true), 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const tabs = [
     { id: "niche", label: "Niche", icon: <Compass className="w-5 h-5 text-white" /> },
@@ -65,10 +72,10 @@ const Dashboard: React.FC = () => {
     "Creator";
 
   return (
-    <div className="relative min-h-screen flex bg-[#05010E] text-white overflow-hidden">
+    <div className="relative min-h-screen flex bg-[#05010E] text-white">
       {/* ✨ Background Gradient */}
       <svg
-        className="absolute top-0 right-0 w-3/4 md:w-2/3 opacity-4"
+        className="absolute top-0 right-0 w-3/4 md:w-2/3 opacity-6"
         viewBox="0 0 600 600"
         xmlns="http://www.w3.org/2000/svg"
       >
@@ -78,17 +85,8 @@ const Dashboard: React.FC = () => {
             <stop stopColor="#f72585" offset="1" />
           </linearGradient>
         </defs>
-
-        <circle
-          cx="300"
-          cy="300"
-          r="280"
-          stroke="url(#grad)"
-          strokeWidth="3"
-          fill="none"
-        />
+        <circle cx="300" cy="300" r="280" stroke="url(#grad)" strokeWidth="3" fill="none" />
       </svg>
-
 
       {/* ===== DESKTOP SIDEBAR ===== */}
       <aside className="hidden md:flex flex-col justify-between w-64 bg-[#0A0219]/80 border-r border-white/10 backdrop-blur-md p-6">
@@ -102,10 +100,11 @@ const Dashboard: React.FC = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 ${activeTab === tab.id
+                className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 ${
+                  activeTab === tab.id
                     ? "bg-gradient-to-r from-[#9b5de5] to-[#f72585] text-white"
                     : "text-gray-400 hover:text-white hover:bg-white/5"
-                  }`}
+                }`}
               >
                 {tab.icon}
                 <span>{tab.label}</span>
@@ -176,10 +175,59 @@ const Dashboard: React.FC = () => {
         </header>
 
         {/* CONTENT */}
-        <section className="flex-1 px-6 pt-4 pb-24 overflow-y-auto">
-          {renderContent()}
-        </section>
+        <section className="flex-1 px-6 pt-4 pb-28 overflow-y-auto">{renderContent()}</section>
       </main>
+
+      {/* ===== NICHE POPUP ===== */}
+      <AnimatePresence>
+        {showNichePopup && (
+          <>
+            <motion.div
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
+              onClick={() => setShowNichePopup(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 flex items-center justify-center z-50"
+            >
+              <div className="bg-[#0D061A] border border-white/10 p-8 rounded-2xl shadow-2xl max-w-md w-[90%] text-center">
+                <h2 className="text-2xl font-semibold text-white mb-3">
+                  Let’s Find Your Niche 🎯
+                </h2>
+                <p className="text-gray-400 mb-6">
+                  Answer a few quick questions so we can match you with a niche that fits you best.
+                </p>
+                <div className="flex flex-col gap-3">
+                  <button
+                    onClick={() => {
+                      setShowNichePopup(false);
+                      navigate("/niche-questionnaire");
+                    }}
+                    className="py-3 bg-gradient-to-r from-[#9b5de5] to-[#f72585] text-white rounded-lg font-medium hover:opacity-90 transition"
+                  >
+                    Start Questionnaire
+                  </button>
+                  <button
+                    onClick={() => {
+                      setShowNichePopup(false);
+                      navigate("/niche");
+                    }}
+                    className="py-3 border border-gray-600 text-gray-300 rounded-lg hover:bg-white/10 transition"
+                  >
+                    Already Have a Niche
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* ===== MOBILE PROFILE MENU ===== */}
       <AnimatePresence>
@@ -243,8 +291,9 @@ const Dashboard: React.FC = () => {
           <motion.button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`relative flex flex-col items-center justify-center gap-1 text-xs transition-all duration-300 ${activeTab === tab.id ? "text-[#F1824A]" : "text-gray-400"
-              }`}
+            className={`relative flex flex-col items-center justify-center gap-1 text-xs transition-all duration-300 ${
+              activeTab === tab.id ? "text-[#F1824A]" : "text-gray-400"
+            }`}
           >
             <AnimatePresence mode="wait">
               {activeTab === tab.id ? (
@@ -262,10 +311,7 @@ const Dashboard: React.FC = () => {
                 <div className="w-5 h-5">{tab.icon}</div>
               )}
             </AnimatePresence>
-            <span
-              className={`mt-6 ${activeTab === tab.id ? "text-white font-medium" : ""
-                }`}
-            >
+            <span className={`mt-6 ${activeTab === tab.id ? "text-white font-medium" : ""}`}>
               {tab.label}
             </span>
           </motion.button>
