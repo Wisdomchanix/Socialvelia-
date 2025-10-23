@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Search, Flame, Bookmark } from "lucide-react";
-import { useAuth } from "../components/AuthContext";
+// import { useAuth } from "../components/AuthContext";
 
 // Mock viral topics data
 const trendingTopics = [
@@ -13,7 +13,7 @@ const trendingTopics = [
 ];
 
 const Niche: React.FC = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredTopics, setFilteredTopics] = useState(trendingTopics);
   const [savedNiche, setSavedNiche] = useState<string | null>(null);
