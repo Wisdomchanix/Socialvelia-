@@ -74,7 +74,7 @@ const NicheQuestionnaire: React.FC = () => {
     setSuggestion(null);
 
     try {
-      const res = await fetch("/api/suggest-niche", {
+      const res = await fetch("api/suggest-niche", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(answers),
