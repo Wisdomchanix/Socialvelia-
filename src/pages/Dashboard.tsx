@@ -39,8 +39,8 @@ const Dashboard: React.FC = () => {
   };
 
   useEffect(() => {
-    // show popup after 3 seconds
-    const timer = setTimeout(() => setShowNichePopup(true), 3000);
+    // show popup after 2 seconds
+    const timer = setTimeout(() => setShowNichePopup(true), 2000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -73,7 +73,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="relative min-h-screen flex bg-[#05010E] text-white">
-      {/* ✨ Background Gradient */}
+
       <svg
         className="absolute top-0 right-0 w-3/4 md:w-2/3 opacity-6"
         viewBox="0 0 600 600"
@@ -132,7 +132,7 @@ const Dashboard: React.FC = () => {
         </div>
       </aside>
 
-      {/* ===== MAIN CONTENT ===== */}
+
       <main className="flex-1 flex flex-col">
         {/* HEADER */}
         <header className="flex justify-between items-center px-5 pt-6 pb-3 border-b border-white/5">

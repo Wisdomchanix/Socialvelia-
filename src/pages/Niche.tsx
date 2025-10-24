@@ -18,13 +18,13 @@ const Niche: React.FC = () => {
   const [filteredTopics, setFilteredTopics] = useState(trendingTopics);
   const [savedNiche, setSavedNiche] = useState<string | null>(null);
 
-  // ✅ Simulate loading user's saved niche from localStorage
+  // Simulate loading user's saved niche from localStorage
   useEffect(() => {
     const niche = localStorage.getItem("userNiche");
     if (niche) setSavedNiche(niche);
   }, []);
 
-  // ✅ Filter topics based on search input
+  // Filter topics based on search input
   useEffect(() => {
     const results = trendingTopics.filter((topic) =>
       topic.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
