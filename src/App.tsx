@@ -6,6 +6,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import VerifyEmail from "./components/VerifyEmail";
 import NicheQuestionnaire from "./pages/NicheQuestionnaire";
 import Niche from "./pages/Niche";
+import IdeasTab from "./pages/IdeasTab";
+import PromptTab from "./pages/PromptTab";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -17,8 +19,8 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/verify" element={<VerifyEmail />} />
-        <Route path="/niche-questionnaire" element={<NicheQuestionnaire/> }/>
-        <Route path="/niche" element={< Niche/>} />
+        <Route path="/niche-questionnaire" element={<NicheQuestionnaire />} />
+        <Route path="/niche" element={< Niche />} />
         <Route
           path="/dashboard"
           element={
@@ -27,6 +29,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/ideas" element={<IdeasTab/>} />
+        <Route path="/prompt" element={<PromptTab/>} />
       </Routes>
     </Router>
   )

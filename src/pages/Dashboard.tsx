@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";  ///{Add useeffect later}
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
@@ -12,6 +12,8 @@ import {
   Compass,
 } from "lucide-react";
 import { useAuth } from "../components/AuthContext";
+import IdeasTab from "./IdeasTab";
+import PromptTab from "./PromptTab";
 
 const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("niche");
@@ -38,11 +40,11 @@ const Dashboard: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    // show popup after 2 seconds
-    const timer = setTimeout(() => setShowNichePopup(true), 2000);
-    return () => clearTimeout(timer);
-  }, []);
+  // useEffect(() => {
+  //   // show popup after 2 seconds
+  //   const timer = setTimeout(() => setShowNichePopup(true), 2000);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   const tabs = [
     { id: "niche", label: "Niche", icon: <Compass className="w-5 h-5 text-white" /> },
@@ -56,9 +58,9 @@ const Dashboard: React.FC = () => {
       case "niche":
         return <p className="text-gray-300 mt-6">Choose your niche content...</p>;
       case "viral":
-        return <p className="text-gray-300 mt-6">Find viral content ideas...</p>;
+        return <IdeasTab/>;
       case "prompt":
-        return <p className="text-gray-300 mt-6">Refine your prompts...</p>;
+        return  <PromptTab/>;
       case "voice":
         return <p className="text-gray-300 mt-6">Generate voiceovers...</p>;
       default:
