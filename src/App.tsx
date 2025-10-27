@@ -8,6 +8,8 @@ import NicheQuestionnaire from "./pages/NicheQuestionnaire";
 import Niche from "./pages/Niche";
 import IdeasTab from "./pages/IdeasTab";
 import PromptTab from "./pages/PromptTab";
+import VoiceOverTab from "./pages/VoiceOverTab";
+import NicheCombined from "./pages/NicheCombined";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -31,6 +33,8 @@ function App() {
         />
         <Route path="/ideas" element={<IdeasTab/>} />
         <Route path="/prompt" element={<PromptTab/>} />
+        <Route path="/voice" element={<VoiceOverTab/>} />
+        <Route path="/niche" element={<NicheCombined/>} />
       </Routes>
     </Router>
   )
