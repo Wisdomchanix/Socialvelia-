@@ -34,7 +34,7 @@ const questions: Question[] = [
     id: 3,
     icon: <Sparkles className="w-5 h-5 text-white" />,
     question: "Which format do you love creating?",
-    options: ["Videos", "Articles", "Podcasts",  "Tutorials"],
+    options: ["Videos", "Articles", "Podcasts", "Tutorials"],
   },
   {
     id: 4,
@@ -57,6 +57,10 @@ const NicheCombined: React.FC = () => {
     return () => {
       if (generatingRef.current) window.clearInterval(generatingRef.current);
     };
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
   const handleAnswer = (option: string) => {
@@ -250,7 +254,10 @@ const NicheCombined: React.FC = () => {
                       <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
                         <div
                           className="h-2 bg-gradient-to-r from-[#9b5de5] to-[#f72585]"
-                          style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
+                          style={{
+                            width: `${answers.length > 0 ? (answers.length / questions.length) * 100 : 0
+                              }%`,
+                          }}
                         />
                       </div>
                       <p className="text-xs text-gray-300 mt-3">Selected answers</p>

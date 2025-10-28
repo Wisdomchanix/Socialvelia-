@@ -8,12 +8,14 @@ import {
 import { auth } from "../Firebase/firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
+import { FiEye, FiEyeOff } from "react-icons/fi"; // 👈 added for view password
 
 const provider = new GoogleAuthProvider();
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // 👈 password visibility
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -92,14 +94,24 @@ const Login: React.FC = () => {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full p-3 rounded-lg bg-white/10 border border-gray-700 outline-none focus:ring-2 focus:ring-[#7209b7] text-white transition-all duration-500"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+
+          {/* Password Input with View/Hide */}
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              className="w-full p-3 pr-10 rounded-lg bg-white/10 border border-gray-700 outline-none focus:ring-2 focus:ring-[#7209b7] text-white transition-all duration-500"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <div
+              className="absolute right-3 top-3 text-gray-400 cursor-pointer"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FiEyeOff /> : <FiEye />}
+            </div>
+          </div>
 
           {error && <p className="text-red-400 text-sm">{error}</p>}
 

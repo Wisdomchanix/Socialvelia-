@@ -1,5 +1,5 @@
-// src/pages/IdeasTab.tsx
 import React from "react";
+import { useEffect} from "react";
 import { motion } from "framer-motion";
 import { Lightbulb, Video, Rocket, Laptop, Brain } from "lucide-react";
 
@@ -32,6 +32,9 @@ const ideas = [
 ];
 
 const IdeasTab: React.FC = () => {
+    useEffect(() => {
+      window.scrollTo(0, 0);
+    }, []);
   return (
     <div className="min-h-screen bg-[#05010E] text-white px-6 md:px-16 py-16">
       <div className="max-w-5xl mx-auto text-center">

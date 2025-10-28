@@ -1,8 +1,22 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, X, Search, Mic, ChevronDown } from "lucide-react";
+import { useEffect } from "react";
+import ScrollReveal from "scrollreveal";
 
 const VoiceOverTab: React.FC = () => {
+
+  useEffect(() => {
+    ScrollReveal().reveal(".voice", {
+      duration: 1000,
+      distance: "60px",
+      origin: "bottom",
+      easing: "ease-in-out",
+      reset: true,
+      interval: 200,
+    });
+  }, []);
+
   const [text, setText] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -19,8 +33,12 @@ const VoiceOverTab: React.FC = () => {
     voice.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-[#05010E] text-white px-4 md:px-10 py-6 flex flex-col relative">
+    <div className="min-h-screen bg-[#05010E] text-white px-4 md:px-10 py-6 flex flex-col relative voice">
       {/* Title */}
       <h2 className="text-2xl md:text-3xl font-semibold mb-6">Text to Speech</h2>
 
@@ -107,7 +125,7 @@ const VoiceOverTab: React.FC = () => {
                         className="w-8 h-8 rounded-full"
                         style={{
                           background: voice.color,
-                        //   boxShadow: 0 0 10px ${voice.color},
+                          //   boxShadow: 0 0 10px ${voice.color},
                         }}
                       />
                       <div>

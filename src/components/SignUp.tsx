@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FiMail, FiLock, FiUser } from "react-icons/fi";
+import { FiMail, FiLock, FiUser, FiEye, FiEyeOff } from "react-icons/fi"; // 👈 added icons
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
@@ -22,6 +22,8 @@ const Signup: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [strength, setStrength] = useState(0);
   const [strengthLabel, setStrengthLabel] = useState("Weak");
+  const [showPassword, setShowPassword] = useState(false); // 👈 state for password visibility
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // 👈 for confirm password
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -176,19 +178,25 @@ const Signup: React.FC = () => {
             />
           </div>
 
-          {/* Password field + strength bar */}
+          {/* Password field + view toggle */}
           <div className="relative space-y-2">
             <div className="relative">
               <FiLock className="absolute left-3 top-3 text-gray-400" />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"} // 👈 toggle visibility
                 name="password"
                 placeholder="Password"
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full pl-10 pr-4 py-2 rounded-lg bg-white/5 border border-gray-700 text-white focus:ring-2 focus:ring-[#7209b7] outline-none transition-all"
+                className="w-full pl-10 pr-10 py-2 rounded-lg bg-white/5 border border-gray-700 text-white focus:ring-2 focus:ring-[#7209b7] outline-none transition-all"
               />
+              <div
+                className="absolute right-3 top-3 text-gray-400 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FiEyeOff /> : <FiEye />}
+              </div>
             </div>
 
             {formData.password && (
@@ -224,21 +232,28 @@ const Signup: React.FC = () => {
             )}
           </div>
 
+          {/* Confirm Password + view toggle */}
           <div className="relative">
             <FiLock className="absolute left-3 top-3 text-gray-400" />
             <input
-              type="password"
+              type={showConfirmPassword ? "text" : "password"} // 👈 toggle visibility
               name="confirmPassword"
               placeholder="Confirm Password"
               value={formData.confirmPassword}
               onChange={handleChange}
               required
-              className={`w-full pl-10 pr-4 py-2 rounded-lg border ${
+              className={`w-full pl-10 pr-10 py-2 rounded-lg border ${
                 formData.confirmPassword && formData.password !== formData.confirmPassword
                   ? "border-red-500 focus:ring-red-500"
                   : "border-gray-700 focus:ring-[#7209b7]"
               } bg-white/5 text-white outline-none transition-all`}
             />
+            <div
+              className="absolute right-3 top-3 text-gray-400 cursor-pointer"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? <FiEyeOff /> : <FiEye />}
+            </div>
             {formData.confirmPassword && formData.password !== formData.confirmPassword && (
               <p className="text-xs text-red-400 mt-1">Passwords do not match</p>
             )}
