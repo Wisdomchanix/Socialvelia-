@@ -1,4 +1,4 @@
-import React, { useState } from "react";  ///{Add useeffect }
+import React, { useState} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
@@ -14,8 +14,8 @@ import {
 import { useAuth } from "../components/AuthContext";
 import IdeasTab from "./IdeasTab";
 import PromptTab from "./PromptTab";
-import VoiceOverTab from "./VoiceOverTab";
 import NicheCombined from "./NicheCombined";
+import VoiceOverTab from "./VoiceOverTab";
 
 const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState("niche");
@@ -42,6 +42,7 @@ const Dashboard: React.FC = () => {
     }
   };
 
+  
   // useEffect(() => {
   //   // show popup after 2 seconds
   //   const timer = setTimeout(() => setShowNichePopup(true), 2000);
@@ -100,19 +101,13 @@ const Dashboard: React.FC = () => {
           </h1>
 
           <nav className="flex flex-col gap-4">
-            {(activeTab === "prompt" ? tabs.filter((tab) => tab.id === "prompt") : tabs).map((tab) => (
+            {tabs.map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => {
-                  if (activeTab === "prompt" && tab.id === "prompt") {
-                    setActiveTab("niche"); // go back home
-                  } else {
-                    setActiveTab(tab.id);
-                  }
-                }}
+                onClick={() => setActiveTab(tab.id)}
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg transition-all duration-300 ${activeTab === tab.id
-                  ? "bg-gradient-to-r from-[#9b5de5] to-[#f72585] text-white"
-                  : "text-gray-400 hover:text-white hover:bg-white/5"
+                    ? "bg-gradient-to-r from-[#9b5de5] to-[#f72585] text-white"
+                    : "text-gray-400 hover:text-white hover:bg-white/5"
                   }`}
               >
                 {tab.icon}
@@ -296,16 +291,10 @@ const Dashboard: React.FC = () => {
 
       {/* ===== MOBILE TAB BAR ===== */}
       <nav className="md:hidden fixed bottom-3 left-1/2 transform -translate-x-1/2 bg-[#0A0219]/90 backdrop-blur-md border border-white/10 rounded-2xl px-4 py-2 flex justify-between w-[95%] max-w-sm shadow-lg">
-        {(activeTab === "prompt" ? tabs.filter(tab => tab.id === "prompt") : tabs).map((tab) => (
+        {tabs.map((tab) => (
           <motion.button
             key={tab.id}
-            onClick={() => {
-              if (activeTab === "prompt" && tab.id === "prompt") {
-                setActiveTab("niche"); // go back home
-              } else {
-                setActiveTab(tab.id);
-              }
-            }}
+            onClick={() => setActiveTab(tab.id)}
             className={`relative flex flex-col items-center justify-center gap-1 text-xs transition-all duration-300 ${activeTab === tab.id ? "text-[#F1824A]" : "text-gray-400"
               }`}
           >

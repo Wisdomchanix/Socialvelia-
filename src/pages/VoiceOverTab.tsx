@@ -28,7 +28,7 @@ const VoiceOverTab: React.FC = () => {
       <textarea
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Start typing here or paste any text you want to turn into lifelike speech..."
+        placeholder="Start typing here or paste any text you want to turn into life like speech..."
         className="w-full bg-[#1a1029] border border-gray-700 rounded-2xl px-4 py-3 text-sm md:text-base text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#f72585] resize-none h-40"
       />
 

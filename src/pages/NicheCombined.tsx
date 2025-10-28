@@ -22,25 +22,25 @@ const questions: Question[] = [
     id: 1,
     icon: <Sparkles className="w-5 h-5 text-white" />,
     question: "What type of content excites you the most?",
-    options: ["Tech & Gadgets", "Lifestyle", "Finance", "Entertainment", "Education", "Fitness"],
+    options: ["Tech & Gadgets", "Lifestyle", "Entertainment", "Fitness"],
   },
   {
     id: 2,
     icon: <Sparkles className="w-5 h-5 text-white" />,
     question: "Who do you most enjoy helping or inspiring?",
-    options: ["Entrepreneurs", "Students", "Gamers", "Homeowners", "Artists", "General Audience"],
+    options: ["Entrepreneurs", "Students", "Gamers", "General Audience"],
   },
   {
     id: 3,
     icon: <Sparkles className="w-5 h-5 text-white" />,
     question: "Which format do you love creating?",
-    options: ["Videos", "Articles", "Podcasts", "Graphics & Memes", "Tutorials"],
+    options: ["Videos", "Articles", "Podcasts",  "Tutorials"],
   },
   {
     id: 4,
     icon: <Sparkles className="w-5 h-5 text-white" />,
     question: "What’s your main goal with content creation?",
-    options: ["Build a personal brand", "Make money", "Educate others", "Entertain people", "Inspire others"],
+    options: ["Build a personal brand", "Make money", "Entertain people",],
   },
 ];
 
