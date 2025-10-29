@@ -8,14 +8,14 @@ import {
 import { auth } from "../Firebase/firebase";
 import { Link, useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
-import { FiEye, FiEyeOff } from "react-icons/fi"; // 👈 added for view password
+import { FiEye, FiEyeOff } from "react-icons/fi"; //  added for view password
 
 const provider = new GoogleAuthProvider();
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // 👈 password visibility
+  const [showPassword, setShowPassword] = useState(false); // password visibility
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();

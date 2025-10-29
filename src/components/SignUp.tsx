@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FiMail, FiLock, FiUser, FiEye, FiEyeOff } from "react-icons/fi"; // 👈 added icons
+import { FiMail, FiLock, FiUser, FiEye, FiEyeOff } from "react-icons/fi"; 
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
@@ -22,8 +22,8 @@ const Signup: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [strength, setStrength] = useState(0);
   const [strengthLabel, setStrengthLabel] = useState("Weak");
-  const [showPassword, setShowPassword] = useState(false); // 👈 state for password visibility
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // 👈 for confirm password
+  const [showPassword, setShowPassword] = useState(false); //  state for password visibility
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // for confirm password
   const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -183,7 +183,7 @@ const Signup: React.FC = () => {
             <div className="relative">
               <FiLock className="absolute left-3 top-3 text-gray-400" />
               <input
-                type={showPassword ? "text" : "password"} // 👈 toggle visibility
+                type={showPassword ? "text" : "password"} //  toggle visibility
                 name="password"
                 placeholder="Password"
                 value={formData.password}
@@ -236,7 +236,7 @@ const Signup: React.FC = () => {
           <div className="relative">
             <FiLock className="absolute left-3 top-3 text-gray-400" />
             <input
-              type={showConfirmPassword ? "text" : "password"} // 👈 toggle visibility
+              type={showConfirmPassword ? "text" : "password"} //  toggle visibility
               name="confirmPassword"
               placeholder="Confirm Password"
               value={formData.confirmPassword}

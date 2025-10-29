@@ -239,7 +239,7 @@ const PromptTab: React.FC = () => {
               animate={{ y: 0 }}
               exit={{ y: "100%" }}
               transition={{ type: "spring", stiffness: 80, damping: 20 }}
-              className="fixed bottom-0 left-0 right-0 bg-[#0B0218] rounded-t-3xl p-6 z-50 max-h-[90vh] overflow-y-auto"
+              className="fixed bottom-0 left-0 right-0 bg-[#0B0218] rounded-t-3xl p-6 z-50 min-h-[85vh] overflow-y-auto"
             >
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-lg md:text-xl font-semibold">Select an AI Tool</h3>
