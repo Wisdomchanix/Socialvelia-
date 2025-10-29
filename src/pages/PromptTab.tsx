@@ -3,7 +3,6 @@ import ScrollReveal from "scrollreveal";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Copy, Loader2, ChevronDown, X, Search } from "lucide-react";
 
-
 interface Message {
   id: number;
   text: string;
@@ -14,27 +13,83 @@ interface AiTool {
   name: string;
   desc: string;
   color: string;
+  logo: string;
 }
 
 const toolCategories: Record<string, AiTool[]> = {
   "Image Generation": [
-    { name: "Midjourney", desc: "Advanced AI image creator", color: "#FF8C00" },
-    { name: "DALL·E", desc: "AI art generator by OpenAI", color: "#1E90FF" },
-    { name: "Stable Diffusion", desc: "Open-source AI image model", color: "#32CD32" },
+    {
+      name: "Midjourney",
+      desc: "Advanced AI image creator",
+      color: "#FF8C00",
+      logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3byVf3y2Ss5zECUfrU_TG8SwkINsTXMloxg&s",
+    },
+    {
+      name: "DALL·E",
+      desc: "AI art generator by OpenAI",
+      color: "#1E90FF",
+      logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZl0qXIOIUdv4v7hgW5jNMeYJO0coGRyNGOQ&s",
+    },
+    {
+      name: "Stable Diffusion",
+      desc: "Open-source AI image model",
+      color: "#32CD32",
+      logo: "https://stablediffusionweb.com/images/logo.png",
+    },
   ],
   "Video Generation": [
-    { name: "Runway", desc: "AI video editing and generation", color: "#9370DB" },
-    { name: "Pika Labs", desc: "AI video creation tool", color: "#FF69B4" },
+    {
+      name: "Runway",
+      desc: "AI video editing and generation",
+      color: "#9370DB",
+      logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGzWVkOGCG9B6WvxSoigJhJcJsP0lMC1Emng&s",
+    },
+    {
+      name: "Pika Labs",
+      desc: "AI video creation tool",
+      color: "#FF69B4",
+      logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQprHWGktZbzqRwro1aOvwZjNNiOylMGMLzRA&s",
+    },
   ],
   "Audio Generation": [
-    { name: "SocialVelia", desc: "AI voice generation tool", color: "#7209b7" },
-    { name: "ElevenLabs", desc: "AI voice generation tool", color: "#00BFFF" },
-    { name: "Synthesia", desc: "AI voice and avatar tool", color: "#FFD700" },
+    {
+      name: "SocialVelia",
+      desc: "AI voice generation tool",
+      color: "#7209b7",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg", // placeholder
+    },
+    {
+      name: "ElevenLabs",
+      desc: "AI voice generation tool",
+      color: "#00BFFF",
+      logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ1AL2F8WfTH1vlrQCpsjyfrL_4RdwcjqtNg&s",
+    },
+    {
+      name: "Synthesia",
+      desc: "AI voice and avatar tool",
+      color: "#FFD700",
+      logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbBVPuO6mSZpO-V9reoKRB8vM8h_PUeF1FAQ&s",
+    },
   ],
   "Text Generation": [
-    { name: "ChatGPT", desc: "General purpose text AI", color: "#00BFFF" },
-    { name: "Gemini", desc: "Google AI text assistant", color: "#FF4500" },
-    { name: "Claude", desc: "AI assistant for writing", color: "#32CD32" },
+    {
+      name: "ChatGPT",
+      desc: "General purpose text AI",
+      color: "#00BFFF",
+      logo: "https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg",
+    },
+    {
+      name: "Gemini",
+      desc: "Google AI text assistant",
+      color: "#FF4500",
+      logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbp4HwLhAE0e-bxVLJzo0IWEsBp9KpZJIicg&s",
+    },
+    {
+      name: "Claude",
+      desc: "AI assistant for writing",
+      color: "#32CD32",
+      logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpzwepbRGYXOWZEyC01x_7tEoDLYmRfwNxDg&s",
+    },
   ],
 };
 
@@ -115,7 +170,6 @@ const PromptTab: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#05010E] text-white px-4 md:px-10 py-6 flex flex-col relative prompt">
-      {/* Title */}
       <h2 className="text-2xl md:text-3xl font-semibold mb-6">AI Prompt Generator</h2>
 
       {/* Purpose Selection */}
@@ -149,7 +203,7 @@ const PromptTab: React.FC = () => {
           <div className="flex flex-col md:flex-row gap-3">
             <button
               onClick={() => setIsModalOpen(true)}
-              className="flex items-center justify-between bg-[#1a1029] border border-gray-700 px-4 py-2 rounded-full hover:bg-[#7209b7] hover:border-[#7209b7] transition w-full md:w-auto"
+              className="flex items-center justify-between bg-[#1a1029] border border-gray-700 px-4 py-2 rounded-xl hover:bg-[#7209b7] hover:border-[#7209b7] transition w-full md:w-auto"
             >
               <span>{selectedTool ? selectedTool.name : "Select a Tool"}</span>
               <ChevronDown className="w-4 h-4" />
@@ -273,9 +327,10 @@ const PromptTab: React.FC = () => {
                     }}
                   >
                     <div className="flex items-center gap-3">
-                      <span
-                        className="w-8 h-8 rounded-full"
-                        style={{ background: tool.color }}
+                      <img
+                        src={tool.logo}
+                        alt={tool.name}
+                        className="w-8 h-8 rounded-full object-cover border border-gray-600"
                       />
                       <div>
                         <p className="font-semibold text-white">{tool.name}</p>

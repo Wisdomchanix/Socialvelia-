@@ -40,7 +40,7 @@ const questions: Question[] = [
     id: 4,
     icon: <Sparkles className="w-5 h-5 text-white" />,
     question: "What’s your main goal with content creation?",
-    options: ["Build a personal brand", "Make money", "Entertain people",],
+    options: ["Build a personal brand", "Make money", "Entertain people"],
   },
 ];
 
@@ -134,17 +134,6 @@ const NicheCombined: React.FC = () => {
             `Quick tutorial: How to use a ${primary} feature`,
           ],
         },
-        {
-          name: `Entertaining ${primary} Journeys (Video)`,
-          reason: `Story-driven videos combining product features with entertaining narratives to keep watchers hooked.`,
-          trends: ["Storytime + demo", "Fast cuts & sound design", "Reaction-style reviews"],
-          audience: ["Casual viewers", "Busy entrepreneurs", "Visual learners"],
-          ideas: [
-            `Before/After: ${primary} in real life`,
-            `3 mistakes people make with ${primary}`,
-            `Behind-the-scenes of creating with ${primary}`,
-          ],
-        },
       ];
 
       setSuggestions(result);
@@ -170,8 +159,9 @@ const NicheCombined: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#05010E] text-white flex flex-col items-center px-4 py-8 md:py-12">
-      <div className="w-full max-w-3xl relative">
+    <div className="min-h-screen bg-[#05010E] text-white flex flex-col items-center px-4 py-8 md:py-12 xl:px-16 xl:py-16">
+      <div className="w-full max-w-5xl xl:max-w-6xl relative">
+
         <div className="absolute inset-0 pointer-events-none -z-10">
           <div className="absolute top-1/4 left-1/8 w-56 h-56 bg-purple-600/20 rounded-full blur-3xl"></div>
           <div className="absolute bottom-1/4 right-1/6 w-72 h-72 bg-pink-600/10 rounded-full blur-3xl"></div>
@@ -255,8 +245,11 @@ const NicheCombined: React.FC = () => {
                         <div
                           className="h-2 bg-gradient-to-r from-[#9b5de5] to-[#f72585]"
                           style={{
-                            width: `${answers.length > 0 ? (answers.length / questions.length) * 100 : 0
-                              }%`,
+                            width: `${
+                              answers.length > 0
+                                ? (answers.length / questions.length) * 100
+                                : 0
+                            }%`,
                           }}
                         />
                       </div>
@@ -292,7 +285,8 @@ const NicheCombined: React.FC = () => {
 
                     <button
                       onClick={() => {
-                        if (currentIndex + 1 === questions.length) generateSuggestions(answers);
+                        if (currentIndex + 1 === questions.length)
+                          generateSuggestions(answers);
                         else setCurrentIndex((c) => c + 1);
                       }}
                       className="px-4 py-2 rounded-lg bg-gradient-to-r from-[#9b5de5] to-[#f72585] text-sm font-medium"
@@ -335,7 +329,7 @@ const NicheCombined: React.FC = () => {
                 transition={{ duration: 0.35 }}
               >
                 <div className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:flex xl:grid-cols-3 gap-6 md:flex-row">
                     {suggestions.map((sug, i) => (
                       <motion.div
                         key={i}
