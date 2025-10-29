@@ -208,13 +208,7 @@ const PromptTab: React.FC = () => {
               <span>{selectedTool ? selectedTool.name : "Select a Tool"}</span>
               <ChevronDown className="w-4 h-4" />
             </button>
-            <input
-              type="text"
-              value={customTool}
-              onChange={(e) => setCustomTool(e.target.value)}
-              placeholder="Or enter tool name..."
-              className="w-full bg-[#1a1029] border border-gray-700 rounded-xl px-4 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#f72585]"
-            />
+        
           </div>
         </div>
       )}
