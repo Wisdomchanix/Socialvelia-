@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 40, "column": 0}, "map": {"version":3,"sources":["file:///home/daniel/Social/lib/auth-client.js"],"sourcesContent":["import { createAuthClient } from \"better-auth/react\";\nconst authClient = createAuthClient({\n  baseURL: process.env.AUTH_URL,\n});\nexport default authClient;\n"],"names":[],"mappings":";;;;AAAA;;AACA,MAAM,aAAa,IAAA,qYAAgB,EAAC;IAClC,SAAS,QAAQ,GAAG,CAAC,QAAQ;AAC/B;uCACe","debugId":null}},
+    {"offset": {"line": 54, "column": 0}, "map": {"version":3,"sources":["file:///home/daniel/Social/app/api/auth/%5B...all%5D/route.js"],"sourcesContent":["import { auth } from \"../../../../lib/auth-client\";\nimport { toNextJsHandler } from \"better-auth/next-js\";\n\nexport const { POST, GET } = toNextJsHandler(auth);\n"],"names":[],"mappings":";;;;;;AAAA;AACA;;;AAEO,MAAM,EAAE,IAAI,EAAE,GAAG,EAAE,GAAG,IAAA,sYAAe,EAAC,+HAAI","debugId":null}}]
+}

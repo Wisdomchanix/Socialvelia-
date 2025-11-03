@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 40, "column": 0}, "map": {"version":3,"sources":["file:///home/daniel/Social/app/api/auth/%5B...all%5D/route.js"],"sourcesContent":["import { auth } from \"@/lib/auth\";\nimport { toNextJsHandler } from \"better-auth/next-js\";\n\nexport const { POST, GET } = toNextJsHandler(auth);\n"],"names":[],"mappings":";;;;;;;;;;;AACA;;;AAEO,MAAM,EAAE,IAAI,EAAE,GAAG,EAAE,GAAG,IAAA,sYAAe,EAAC","debugId":null}}]
+}

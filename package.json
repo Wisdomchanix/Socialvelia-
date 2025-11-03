@@ -1,0 +1,36 @@
+{
+  "name": "social-velia",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "biome check",
+    "format": "biome format --write"
+  },
+  "dependencies": {
+    "@better-auth/cli": "^1.3.34",
+    "@google/generative-ai": "^0.24.1",
+    "@huggingface/inference": "^4.13.0",
+    "@prisma/client": "^6.18.0",
+    "better-auth": "^1.3.34",
+    "framer-motion": "^12.23.24",
+    "lucide-react": "^0.552.0",
+    "next": "16.0.1",
+    "prisma": "^6.18.0",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "react-icons": "^5.5.0",
+    "react-masonry-css": "^1.0.16",
+    "scrollreveal": "^4.0.9"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.0",
+    "@tailwindcss/postcss": "^4",
+    "@types/react": "19.2.2",
+    "babel-plugin-react-compiler": "1.0.0",
+    "tailwindcss": "^4",
+    "typescript": "5.9.3"
+  }
+}
