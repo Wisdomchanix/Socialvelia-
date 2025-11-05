@@ -1,100 +1,289 @@
-"use client"
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Search, Flame, Bookmark } from "lucide-react";
-// import { useAuth } from "../components/AuthContext";
+"use client";
+import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Lightbulb, X } from "lucide-react";
 
-// Mock viral topics data
-const trendingTopics = [
-  { id: 1, title: "5 TikTok Trends Dominating Real Estate Marketing", niche: "Real Estate" },
-  { id: 2, title: "The Future of AI-Generated Voiceovers in Content Creation", niche: "AI Tools" },
-  { id: 3, title: "How to Monetize Your Travel Niche on Instagram", niche: "Travel" },
-  { id: 4, title: "Why Fitness Creators Are Blowing Up in 2025", niche: "Fitness" },
-  { id: 5, title: "Top 10 Tech Topics Going Viral This Month", niche: "Technology" },
+const staticIdeas = [
+  {
+    title: "Behind-the-Scenes Tech Reviews",
+    desc: "Show your setup process, unbox gadgets, or reveal what tools make your workflow smoother.",
+  },
+  {
+    title: "Startup Gadget Challenges",
+    desc: "Try building something innovative with a specific gadget or tool and share the journey.",
+  },
+  {
+    title: "Tech for Entrepreneurs Series",
+    desc: "Create a mini-series exploring how business owners use modern tech to boost productivity.",
+  },
+  {
+    title: "AI Tools You Should Know",
+    desc: "Review the latest AI apps and tools that help creators and founders stay ahead.",
+  },
+  {
+    title: "‘What If Tech Ruled’ Scenarios",
+    desc: "Make entertaining short videos imagining how everyday life would change with new tech trends.",
+  },
 ];
 
-const Niche = () => {
-  // const { user } = useAuth();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filteredTopics, setFilteredTopics] = useState(trendingTopics);
-  const [savedNiche, setSavedNiche] = useState<string | null>(null);
+const questions = [
+  {
+    question: "Who is your content mainly for?",
+    options: [
+      "Beginner",
+      "Entrepreneurs",
+      "Students",
+      "Creators",
+      "General audience",
+    ],
+    key: "targetAudience",
+  },
+  {
+    question: "What type of content are you creating?",
+    options: [
+      "YouTube Shorts",
+      "TikTok, Reels",
+      "YouTube long-form",
+      "Instagram Reels",
+    ],
+    key: "contentType",
+  },
+  {
+    question: "What’s your main goal with this content?",
+    options: [
+      "Grow followers fast",
+      "Drive traffic to a product",
+      "Educate and build authority",
+      "Entertain and engage",
+    ],
+    key: "mainGoal",
+  },
+  {
+    question: "What’s your preferred style?",
+    options: [
+      "Serious & educational",
+      "Fun & relatable",
+      "Motivational / emotional",
+      "Trendy / storytelling",
+    ],
+    key: "style",
+  },
+  {
+    question: "What is your current niche?",
+    placeholder: "e.g. tech, beauty, real estate, etc.",
+    key: "niche",
+  },
+];
 
-  // Simulate loading user's saved niche from localStorage
+const IdeasTab = () => {
+  const [showModal, setShowModal] = useState(false);
+  const [currentStep, setCurrentStep] = useState(0);
+  const [answers, setAnswers] = useState({});
+  const [ideas, setIdeas] = useState(staticIdeas);
+  const [loadingAI, setLoadingAI] = useState(false);
+  const [error, setError] = useState("");
+
   useEffect(() => {
-    const niche = localStorage.getItem("userNiche");
-    if (niche) setSavedNiche(niche);
+    window.scrollTo(0, 0);
+    const timer = setTimeout(() => setShowModal(true), 1000);
+    return () => clearTimeout(timer);
   }, []);
 
-  // Filter topics based on search input
-  useEffect(() => {
-    const results = trendingTopics.filter((topic) =>
-      topic.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      topic.niche.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setFilteredTopics(results);
-  }, [searchQuery]);
+  const handleAnswer = (key, value) => {
+    setAnswers((prev) => ({ ...prev, [key]: value }));
+    setError("");
+
+    // Automatically go to the next question after selecting an option
+    setTimeout(() => {
+      if (currentStep < questions.length - 1) {
+        setCurrentStep((prev) => prev + 1);
+      } else {
+        generateIdeasFromAI();
+        setShowModal(false);
+      }
+    }, 400);
+  };
+
+  const handleNext = () => {
+    const currentKey = questions[currentStep].key;
+    const answer = answers[currentKey];
+    if (!answer || answer.trim() === "") {
+      setError("Please answer this question before continuing.");
+      return;
+    }
+    if (currentStep < questions.length - 1) {
+      setCurrentStep(currentStep + 1);
+    } else {
+      generateIdeasFromAI();
+      setShowModal(false);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+      setError("");
+    }
+  };
+
+  const generateIdeasFromAI = async () => {
+    setLoadingAI(true);
+    try {
+      const resp = await fetch("/api/generate-ideas", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ answers }),
+      });
+      const data = await resp.json();
+      if (data.ideas && Array.isArray(data.ideas)) {
+        setIdeas(
+          data.ideas.map((i) => ({
+            title: i.title,
+            desc: i.desc,
+          }))
+        );
+      } else {
+        console.warn("AI responded without ideas:", data);
+        setIdeas(staticIdeas);
+      }
+    } catch (err) {
+      console.error("Error generating via AI:", err);
+      setIdeas(staticIdeas);
+    } finally {
+      setLoadingAI(false);
+    }
+  };
 
   return (
-    <section className="min-h-screen bg-[#05010E] text-white px-6 py-10 transition-colors duration-500">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-[#05010E] text-white px-6 md:px-16 py-16 relative">
+      <div className="max-w-5xl mx-auto text-center">
+        <motion.h1
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-3xl md:text-4xl font-semibold mb-6 bg-gradient-to-r from-orange-400 via-pink-400 to-green-400 text-transparent bg-clip-text"
+        >
+          💡 Content Ideas for{" "}
+          <span className="text-white">Tech Entrepreneurs</span>
+        </motion.h1>
 
-        {/* Page Header */}
-        <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl font-semibold">Your Niche</h1>
-          {savedNiche && (
-            <motion.div
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="flex items-center gap-2 bg-[#1a1029] px-4 py-2 rounded-lg border border-[#9DC88D]/30"
-            >
-              <Bookmark size={18} className="text-[#9DC88D]" />
-              <span className="text-sm text-gray-300">{savedNiche}</span>
-            </motion.div>
-          )}
-        </div>
+        <p className="text-gray-400 max-w-2xl mx-auto mb-12">
+          Fresh, scroll-stopping content ideas to help your niche stand out.
+          Each idea is designed to drive engagement and grow your audience
+          organically.
+        </p>
 
-        {/* Search Bar */}
-        <div className="relative mb-10">
-          <input
-            type="text"
-            placeholder="Search your niche or topic..."
-            className="w-full bg-[#1a1029] border border-gray-700 rounded-xl py-3 pl-12 pr-4 text-white placeholder-gray-400 focus:ring-2 focus:ring-[#9DC88D] outline-none transition"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-          <Search className="absolute left-4 top-3.5 text-gray-400" size={20} />
-        </div>
-
-        {/* Trending Topics Section */}
-        <div>
-          <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-            <Flame size={18} className="text-[#F1824A]" /> Trending Viral Topics
-          </h2>
-
-          <div className="grid sm:grid-cols-2 gap-5">
-            {filteredTopics.length > 0 ? (
-              filteredTopics.map((topic) => (
-                <motion.div
-                  key={topic.id}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: topic.id * 0.1 }}
-                  className="bg-[#1a1029] border border-gray-800 hover:border-[#9DC88D]/50 rounded-xl p-5 shadow-md hover:shadow-[#9DC88D]/10 transition"
-                >
-                  <h3 className="font-medium text-white mb-2">{topic.title}</h3>
-                  <p className="text-sm text-gray-400">{topic.niche}</p>
-                </motion.div>
-              ))
-            ) : (
-              <p className="text-gray-400 text-sm text-center">
-                No topics found for “{searchQuery}”.
-              </p>
-            )}
+        {loadingAI ? (
+          <div className="py-8">Generating AI ideas…</div>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {ideas.map((idea, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.1, duration: 0.5 }}
+                className="p-6 bg-[#1A1029]/60 backdrop-blur-lg rounded-2xl border border-white/10 hover:shadow-[0_0_15px_rgba(241,130,74,0.3)] transition-all"
+              >
+                <div className="flex items-center gap-3 mb-3">
+                  <Lightbulb className="text-yellow-400" size={22} />
+                  <h3 className="text-lg font-medium">{idea.title}</h3>
+                </div>
+                <p className="text-gray-400 text-sm">{idea.desc}</p>
+              </motion.div>
+            ))}
           </div>
-        </div>
+        )}
       </div>
-    </section>
+
+      {/* Questionnaire Modal */}
+      <AnimatePresence>
+        {showModal && (
+          <motion.div
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="bg-[#0e041d] border border-white/10 p-8 rounded-2xl w-[90%] sm:w-[500px] shadow-lg relative"
+            >
+              <button
+                className="absolute top-3 right-3 text-gray-400 hover:text-white"
+                onClick={() => setShowModal(false)}
+              >
+                <X size={18} />
+              </button>
+
+              <h2 className="text-xl font-semibold text-center mb-4 text-white">
+                Question {currentStep + 1} of {questions.length}
+              </h2>
+              <p className="text-gray-300 text-center mb-4">
+                {questions[currentStep].question}
+              </p>
+
+              {questions[currentStep].options ? (
+                <div className="flex flex-col gap-3">
+                  {questions[currentStep].options.map((option, i) => (
+                    <button
+                      key={i}
+                      onClick={() =>
+                        handleAnswer(questions[currentStep].key, option)
+                      }
+                      className={`px-4 py-3 rounded-xl border border-white/10 bg-[#1A1029] hover:bg-[#25163a] transition text-sm ${
+                        answers[questions[currentStep].key] === option
+                          ? "border-[#F1824A] text-[#F1824A]"
+                          : "text-gray-300"
+                      }`}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+              ) : (
+                <input
+                  type="text"
+                  placeholder={questions[currentStep].placeholder}
+                  value={answers[questions[currentStep].key] || ""}
+                  onChange={(e) =>
+                    handleAnswer(questions[currentStep].key, e.target.value)
+                  }
+                  className="w-full bg-[#1A1029] text-gray-200 px-4 py-3 rounded-xl border border-white/10 focus:outline-none focus:border-[#F1824A]"
+                />
+              )}
+
+              {error && (
+                <p className="text-red-400 text-sm mt-3 text-center">{error}</p>
+              )}
+
+              <div className="flex gap-3 mt-6">
+                {currentStep > 0 && (
+                  <button
+                    onClick={handlePrev}
+                    className="w-1/2 py-3 border border-[#F1824A]/50 rounded-xl text-[#F1824A] font-semibold hover:bg-[#F1824A]/10 transition"
+                  >
+                    Back
+                  </button>
+                )}
+                <button
+                  onClick={handleNext}
+                  className={`${
+                    currentStep > 0 ? "w-1/2" : "w-full"
+                  } py-3 bg-gradient-to-r from-[#F1824A] to-[#9DC88D] rounded-xl text-black font-semibold hover:opacity-90 transition`}
+                >
+                  {currentStep === questions.length - 1 ? "Submit" : "Next"}
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 
-export default Niche;
+export default IdeasTab;

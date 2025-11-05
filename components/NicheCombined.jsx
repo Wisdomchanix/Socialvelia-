@@ -8,28 +8,61 @@ const questions = [
     id: 1,
     icon: <Sparkles className="w-5 h-5 text-white" />,
     question: "What type of content excites you the most?",
-    options: ["Tech & Gadgets", "Lifestyle", "Entertainment", "Fitness"],
+    options: [
+      "Story Telling",
+      "Educative",
+      "Entertainment",
+      "Mind blowing facts",
+      "Mysteries",
+    ],
   },
   {
     id: 2,
     icon: <Sparkles className="w-5 h-5 text-white" />,
-    question: "Who do you most enjoy helping or inspiring?",
-    options: ["Entrepreneurs", "Students", "Gamers", "General Audience"],
+    question: "What tone do you want your content to have?",
+    options: [
+      "Funny & Light-hearted",
+      "Deep & thought-provoking",
+      "Informative & educational",
+      "Inspiring & emotional",
+    ],
   },
   {
     id: 3,
     icon: <Sparkles className="w-5 h-5 text-white" />,
-    question: "Which format do you love creating?",
-    options: ["Videos", "Articles", "Podcasts", "Tutorials"],
+    question: "How much do you enjoy doing research before creating content?",
+    options: [
+      " I love doing deep research & learning new things",
+      "I like short, simple ideas I can quickly turn into content",
+      "I enjoy storytelling more than researching facts",
+      "I prefer visual or gameplay content instead",
+    ],
   },
   {
     id: 4,
     icon: <Sparkles className="w-5 h-5 text-white" />,
-    question: "What’s your main goal with content creation?",
-    options: ["Build a personal brand", "Make money", "Entertain people"],
+    question: "Which of these themes sounds most appealing to you?",
+    options: [
+      "Space, Science, & the Unknown",
+      "Human Mind and Behavior",
+      " Old Times and Lost History",
+      "Fictional Stories",
+      "Facts, Health, Animals & Nature",
+    ],
+  },
+  {
+    id: 5,
+    icon: <Sparkles className="w-5 h-5 text-white" />,
+    question: "What’s your main goal as a creator?",
+    options: [
+      "Go viral and grow fast",
+      "Build a loyal audience",
+      "each or inform people",
+      " Entertain & make people laugh",
+      "Share my thoughts or opinions on life",
+    ],
   },
 ];
-
 const NicheCombined = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState([]);
@@ -101,9 +134,15 @@ const NicheCombined = () => {
         method: "POST",
       });
       const data = await resp.json();
+      if (resp.status !== 200) {
+        alert(data.error);
+        return;
+      }
       console.log(data.payload.jsonResponse.niches);
       setSuggestions(data.payload.jsonResponse.niches);
     } catch (error) {
+      console.log(error);
+      alert(error.message);
     } finally {
       stopGeneratingAnimation();
       setLoading(false);

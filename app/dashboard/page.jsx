@@ -19,6 +19,8 @@ import VoiceOverTab from "../../components/VoiceOverTab";
 import IdeasTab from "../../components/IdeasTab";
 import { useRouter } from "next/navigation";
 import authClient from "../../lib/auth-client";
+import { Film } from "lucide-react";
+import RecapTab from "../../components/RecapTab";
 
 const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("niche");
@@ -83,8 +85,12 @@ const Dashboard = () => {
       label: "Voice",
       icon: <Mic className="w-5 h-5 text-white" />,
     },
+    {
+      id: "recap",
+      label: "Recap",
+      icon: <Film className="w-5 h-5 text-white" />,
+    },
   ];
-
   const renderContent = () => {
     switch (activeTab) {
       case "niche":
@@ -95,6 +101,9 @@ const Dashboard = () => {
         return <PromptTab />;
       case "voice":
         return <VoiceOverTab />;
+      case "recap":
+        return <RecapTab />;
+
       default:
         return null;
     }
